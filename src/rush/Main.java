@@ -4,13 +4,14 @@ import rush.boundary.ConsoleUI;
 import rush.control.GameController;
 
 /**
- * Entry point for Restaurant Rush.
- * Pass "--echo" as the first argument to echo each input line (useful when piping a test script).
+ * Starts the game. Use "java -cp out rush.Main --echo &lt; runs/stage1-victory.txt"
+ * to replay a saved run; --echo prints each input line so the output is readable.
  */
 public class Main {
 
     public static void main(String[] args) {
-        // TODO: echo = (args.length > 0 && "--echo".equals(args[0]))
-        // TODO: create ConsoleUI(echo), create GameController(ui), call play()
+        boolean echo = args.length > 0 && args[0].equals("--echo");
+        GameController game = new GameController(new ConsoleUI(echo));
+        game.play();
     }
 }
