@@ -1,44 +1,41 @@
 package rush.entity;
 
-/**
- * One customer's order. The price is locked in when the order is taken.
- */
+/** One customer's order. The price is fixed when the order is taken. */
 public class Order {
 
     private Customer customer;
     private MenuItem item;
     private int priceCents;
-    private int unitsDone;
-    private OrderStatus status;
+    private int unitsDone = 0;
+    private OrderStatus status = OrderStatus.PREPARING;
 
     public Order(Customer customer, MenuItem item, int priceCents) {
         this.customer = customer;
         this.item = item;
         this.priceCents = priceCents;
-        this.unitsDone = 0;
-        this.status = OrderStatus.PREPARING;
     }
 
-    /**
-     * Adds one preparation unit; the order becomes READY once all of the item's prep units are done.
-     */
+    /** Called by the Chef. The order becomes READY when its last unit is done. */
     public void prepareOneUnit() {
-        // TODO
+        unitsDone++;
+        if (unitsDone >= item.getPrepUnits()) {
+            status = OrderStatus.READY;
+        }
     }
 
     public void markServed() {
-        // TODO
+        status = OrderStatus.SERVED;
     }
 
     public void markPaid() {
-        // TODO
+        status = OrderStatus.PAID;
     }
 
-    /**
-     * Cancels the order if it is still PREPARING or READY.
-     */
+    /** Only an order that has not been served yet can be cancelled. */
     public void cancel() {
-        // TODO
+        if (status == OrderStatus.PREPARING || status == OrderStatus.READY) {
+            status = OrderStatus.CANCELLED;
+        }
     }
 
     public Customer getCustomer() {
@@ -57,20 +54,11 @@ public class Order {
         return status;
     }
 
-    /**
-     * Progress as "<done>/<total>", e.g. "1/2".
-     */
     public String getProgress() {
-        // TODO
-        return "";
+        return unitsDone + "/" + item.getPrepUnits();
     }
 
-    /**
-     * Summary showing item name, formatted price, status and progress.
-     */
-    @Override
     public String toString() {
-        // TODO
-        return "";
+        return item.getName() + " " + Money.format(priceCents) + " [" + status + " " + getProgress() + "]";
     }
 }
