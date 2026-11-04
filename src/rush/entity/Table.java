@@ -25,21 +25,20 @@ public class Table {
      * True when no customer is seated here.
      */
     public boolean isFree() {
-        // TODO
-        return false;
+        return customer == null;
     }
 
     /**
      * Seats the customer at this table.
      */
     public void seat(Customer customer) {
-        // TODO
+        this.customer = customer;
     }
 
     /**
      * Clears the table after the customer pays or leaves.
      */
     public void free() {
-        // TODO
+        customer = null;
     }
 }
