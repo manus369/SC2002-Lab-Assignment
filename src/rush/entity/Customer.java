@@ -1,7 +1,8 @@
 package rush.entity;
 
 /**
- * A restaurant customer. Subclasses define the type name and how fast satisfaction drops.
+ * A customer of the restaurant. Subclasses decide how fast the customer loses
+ * satisfaction (and, in later stages, what they order and how much they pay).
  */
 public abstract class Customer {
 
@@ -9,8 +10,8 @@ public abstract class Customer {
 
     private int id;
     private int arrivalTurn;
-    private int satisfaction;
-    private CustomerStatus status;
+    private int satisfaction = MAX_SATISFACTION;
+    private CustomerStatus status = CustomerStatus.WAITING;
     private Table table;
     private Order order;
     private int servedTurn;
@@ -18,38 +19,27 @@ public abstract class Customer {
     public Customer(int id, int arrivalTurn) {
         this.id = id;
         this.arrivalTurn = arrivalTurn;
-        this.satisfaction = MAX_SATISFACTION;
-        this.status = CustomerStatus.WAITING;
-        this.table = null;
-        this.order = null;
-        this.servedTurn = 0;
     }
 
+    /** Name of the customer type, shown on screen. */
     public abstract String getType();
 
+    /** Satisfaction lost for every turn spent waiting without food. */
     public abstract int getSatisfactionLoss();
 
-    /**
-     * Picks the customer's usual dish: menu.getDish(id - 1).
-     */
+    /** The customer picks their own food: customer n orders dish (n - 1) of the menu, wrapping around. */
     public MenuItem chooseItem(Menu menu) {
-        // TODO
-        return null;
+        return menu.getDish(id - 1);
     }
 
-    /**
-     * True while the customer is still waiting for a table or food (WAITING, SEATED or ORDERED).
-     */
+    /** Still waiting for a table or for food (so loses satisfaction at turn end). */
     public boolean isWaitingForService() {
-        // TODO
-        return false;
+        return status == CustomerStatus.WAITING || status == CustomerStatus.SEATED
+                || status == CustomerStatus.ORDERED;
     }
 
-    /**
-     * Reduces satisfaction by getSatisfactionLoss(), never below 0.
-     */
     public void loseSatisfaction() {
-        // TODO
+        satisfaction = Math.max(0, satisfaction - getSatisfactionLoss());
     }
 
     public int getId() {
@@ -68,40 +58,35 @@ public abstract class Customer {
         return status;
     }
 
-    public Table getTable() {
-        return table;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public int getServedTurn() {
-        return servedTurn;
-    }
-
     public void setStatus(CustomerStatus status) {
         this.status = status;
+    }
+
+    public Table getTable() {
+        return table;
     }
 
     public void setTable(Table table) {
         this.table = table;
     }
 
+    public Order getOrder() {
+        return order;
+    }
+
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public int getServedTurn() {
+        return servedTurn;
     }
 
     public void setServedTurn(int servedTurn) {
         this.servedTurn = servedTurn;
     }
 
-    /**
-     * Identifier and type, e.g. "C1 (Regular)".
-     */
-    @Override
     public String toString() {
-        // TODO
-        return "";
+        return "C" + id + " (" + getType() + ")";
     }
 }

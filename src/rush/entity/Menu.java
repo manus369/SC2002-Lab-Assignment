@@ -3,30 +3,23 @@ package rush.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The restaurant's list of dishes.
- */
+/** The restaurant's menu. */
 public class Menu {
 
-    private List<MenuItem> dishes;
+    private List<MenuItem> dishes = new ArrayList<>();
 
-    /**
-     * Creates the default dishes in order: Salad (900c, 1u), Burger (1500c, 1u), Pasta (1800c, 2u).
-     */
     public Menu() {
-        dishes = new ArrayList<MenuItem>();
-        // TODO: add Salad, Burger, Pasta in that order
+        dishes.add(new MenuItem("Salad", 900, 1));
+        dishes.add(new MenuItem("Burger", 1500, 1));
+        dishes.add(new MenuItem("Pasta", 1800, 2));
     }
 
     public List<MenuItem> getDishes() {
         return dishes;
     }
 
-    /**
-     * Cyclic lookup: index wraps around the dish list using modulo.
-     */
+    /** Returns the dish at the given position, wrapping around the end of the list. */
     public MenuItem getDish(int index) {
-        // TODO
-        return null;
+        return dishes.get(index % dishes.size());
     }
 }

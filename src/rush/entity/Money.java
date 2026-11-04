@@ -1,24 +1,14 @@
 package rush.entity;
 
-/**
- * Utility methods for currency stored as integer cents.
- */
+/** Helper for showing an amount stored in cents as dollars, e.g. 1080 -> "$10.80". */
 public class Money {
 
-    /**
-     * Formats cents as a dollar string, e.g. 1080 -> "$10.80".
-     */
     public static String format(int cents) {
-        // TODO
-        return "";
+        return String.format("$%d.%02d", cents / 100, cents % 100);
     }
 
-    /**
-     * Multiplies an amount by a factor and rounds to the nearest cent,
-     * e.g. multiply(1500, 0.9) -> 1350.
-     */
+    /** Multiplies an amount by a factor (e.g. 0.9 for 10% off), rounded to the nearest cent. */
     public static int multiply(int cents, double factor) {
-        // TODO
-        return 0;
+        return (int) Math.round(cents * factor);
     }
 }
