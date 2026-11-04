@@ -1,44 +1,36 @@
 package rush.entity;
 
-/**
- * A staff member who can complete at most one task per turn.
- */
+/** A staff member who can do one task per turn. */
 public abstract class Staff {
 
     private String role;
-    private boolean doneThisTurn;
+    private boolean doneThisTurn = false;
 
     public Staff(String role) {
         this.role = role;
-        this.doneThisTurn = false;
     }
 
     public String getRole() {
         return role;
     }
 
-    /**
-     * Resets the staff member so they can act again this turn.
-     */
     public void startTurn() {
-        // TODO
+        doneThisTurn = false;
     }
 
     public boolean isDoneThisTurn() {
         return doneThisTurn;
     }
 
-    /**
-     * Throws if this staff member has already acted this turn.
-     */
+    /** Called by a subclass before doing its task. */
     protected void checkCanWork() throws InvalidActionException {
-        // TODO
+        if (doneThisTurn) {
+            throw new InvalidActionException(role + " has already done a task this turn.");
+        }
     }
 
-    /**
-     * Marks this staff member as having acted this turn.
-     */
+    /** Called by a subclass after its task succeeded. */
     protected void finishTask() {
-        // TODO
+        doneThisTurn = true;
     }
 }

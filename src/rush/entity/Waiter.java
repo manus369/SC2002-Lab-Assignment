@@ -1,34 +1,40 @@
 package rush.entity;
 
-/**
- * Seats customers, takes orders and serves READY dishes (one task per turn).
- */
+/** Seats a customer, takes an order or serves a READY order (one of these per turn). */
 public class Waiter extends Staff {
 
     public Waiter() {
         super("Waiter");
     }
 
-    /**
-     * Seats a waiting customer at a free table via the restaurant.
-     */
     public void seatCustomer(Customer customer, Restaurant restaurant) throws InvalidActionException {
-        // TODO
+        checkCanWork();
+        restaurant.seatCustomer(customer);
+        finishTask();
     }
 
-    /**
-     * Takes a SEATED customer's order: the customer chooses the item, an Order is created
-     * and linked to the customer, and the customer becomes ORDERED.
-     */
     public Order takeOrder(Customer customer, Menu menu) throws InvalidActionException {
-        // TODO
-        return null;
+        checkCanWork();
+        if (customer.getStatus() != CustomerStatus.SEATED) {
+            throw new InvalidActionException(customer + " is not seated and waiting to order.");
+        }
+        MenuItem item = customer.chooseItem(menu);
+        Order order = new Order(customer, item, item.getPriceCents());
+        customer.setOrder(order);
+        customer.setStatus(CustomerStatus.ORDERED);
+        finishTask();
+        return order;
     }
 
-    /**
-     * Serves a customer whose order is READY: order and customer become SERVED and servedTurn is recorded.
-     */
     public void serve(Customer customer, int turn) throws InvalidActionException {
-        // TODO
+        checkCanWork();
+        Order order = customer.getOrder();
+        if (order == null || order.getStatus() != OrderStatus.READY) {
+            throw new InvalidActionException(customer + " has no READY order to serve.");
+        }
+        order.markServed();
+        customer.setStatus(CustomerStatus.SERVED);
+        customer.setServedTurn(turn);
+        finishTask();
     }
 }
