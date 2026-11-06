@@ -1,14 +1,12 @@
 package rush.entity;
 
-/**
- * Lifecycle of a customer, from arrival to payment or leaving.
- */
+/** Where a customer is in the visit, from arriving to leaving. */
 public enum CustomerStatus {
-    WAITING,
-    SEATED,
-    ORDERED,
-    SERVED,
-    READY_TO_PAY,
+    WAITING,      // in the waiting queue
+    SEATED,       // at a table, order not taken yet
+    ORDERED,      // order taken, food not served yet
+    SERVED,       // food served, eating
+    READY_TO_PAY, // finished eating
     PAID,
-    LEFT
+    LEFT          // left unhappy without paying
 }

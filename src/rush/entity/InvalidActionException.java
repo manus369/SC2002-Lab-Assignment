@@ -1,9 +1,6 @@
 package rush.entity;
 
-/**
- * Thrown when the manager picks an action that breaks a game rule.
- * The message explains why, and the staff member's task is not used up.
- */
+/** Thrown when the manager picks an action that the rules do not allow. The message explains why. */
 public class InvalidActionException extends Exception {
 
     public InvalidActionException(String message) {

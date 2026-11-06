@@ -3,235 +3,156 @@ package rush.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Holds the menu, tables, customer queues and running totals for one game.
- */
+/** Holds the tables, the waiting queue, the customers and the results so far. */
 public class Restaurant {
 
-    private Menu menu;
-    private List<Table> tables;
-    private List<Customer> waitingQueue;
-    private List<Customer> readyToPay;
-    private List<Customer> customers;
-    private int revenueCents;
-    private int paidCount;
-    private int totalPaidSatisfaction;
-    private int leftCount;
+    private Menu menu = new Menu();
+    private List<Table> tables = new ArrayList<>();
+    private List<Customer> waitingQueue = new ArrayList<>();
+    private List<Customer> readyToPay = new ArrayList<>(); // oldest first
+    private List<Customer> customers = new ArrayList<>();  // everyone who arrived
 
-    /**
-     * Creates the menu and tables numbered 1..numberOfTables.
-     */
+    private int revenueCents = 0;
+    private int paidCount = 0;
+    private int totalPaidSatisfaction = 0;
+    private int leftCount = 0;
+
     public Restaurant(int numberOfTables) {
-        menu = new Menu();
-        tables = new ArrayList<Table>();
-        waitingQueue = new ArrayList<Customer>();
-        readyToPay = new ArrayList<Customer>();
-        customers = new ArrayList<Customer>();
-        revenueCents = 0;
-        paidCount = 0;
-        totalPaidSatisfaction = 0;
-        leftCount = 0;
-
-        // add numberOfTables tables numbered from 1
         for (int i = 1; i <= numberOfTables; i++) {
             tables.add(new Table(i));
         }
     }
 
-    /**
-     * Adds a newly arrived customer to the waiting queue and the list of all customers.
-     */
     public void addCustomer(Customer customer) {
         customers.add(customer);
         waitingQueue.add(customer);
     }
 
-    /**
-     * Finds a customer by id, or throws if there is no such customer.
-     */
     public Customer findCustomer(int id) throws InvalidActionException {
         for (Customer c : customers) {
             if (c.getId() == id) {
                 return c;
             }
         }
-
         throw new InvalidActionException("There is no customer C" + id + ".");
     }
 
-    /**
-     * Returns the first free table, or null if all are occupied.
-     */
     public Table findFreeTable() {
         for (Table t : tables) {
             if (t.isFree()) {
                 return t;
             }
         }
-
         return null;
     }
 
-    /**
-     * Seats a WAITING customer at a free table and removes them from the waiting queue.
-     */
+    /** Moves a queued customer to a free table. Used by the Waiter (and later the Host). */
     public void seatCustomer(Customer customer) throws InvalidActionException {
-        if (customer == null || customer.getStatus() != CustomerStatus.WAITING
-                || !waitingQueue.contains(customer)) {
-            throw new InvalidActionException("Customer is not in the waiting queue.");
+        if (customer.getStatus() != CustomerStatus.WAITING) {
+            throw new InvalidActionException(customer + " is not in the waiting queue.");
         }
-
         Table table = findFreeTable();
-
         if (table == null) {
             throw new InvalidActionException("There is no free table.");
         }
-
         table.seat(customer);
         customer.setTable(table);
         customer.setStatus(CustomerStatus.SEATED);
         waitingQueue.remove(customer);
     }
 
-    /**
-     * Customers SERVED on an earlier turn become READY_TO_PAY and join the readyToPay queue.
-     * Returns the customers that changed.
-     */
+    /** Customers served on an earlier turn finish eating. Returns those who are now READY_TO_PAY. */
     public List<Customer> finishEating(int turn) {
-        List<Customer> finishedCustomers = new ArrayList<Customer>();
-
+        List<Customer> finished = new ArrayList<>();
         for (Customer c : customers) {
-            if (c.getStatus() == CustomerStatus.SERVED
-                    && c.getServedTurn() < turn) {
+            if (c.getStatus() == CustomerStatus.SERVED && c.getServedTurn() < turn) {
                 c.setStatus(CustomerStatus.READY_TO_PAY);
                 readyToPay.add(c);
-                finishedCustomers.add(c);
+                finished.add(c);
             }
         }
-
-        return finishedCustomers;
+        return finished;
     }
 
-    /**
-     * Returns the oldest customer in the readyToPay queue, or null if none.
-     */
     public Customer nextToPay() {
         if (readyToPay.isEmpty()) {
             return null;
         }
-
         return readyToPay.get(0);
     }
 
-    /**
-     * Adds the bill to revenue, records satisfaction, frees the table and removes the customer from readyToPay.
-     */
     public void recordPayment(Customer customer) {
-        if (!readyToPay.remove(customer)) {
-            throw new IllegalStateException("Customer is not ready to pay.");
-        }
-
+        readyToPay.remove(customer);
         revenueCents += customer.getOrder().getPriceCents();
         paidCount++;
         totalPaidSatisfaction += customer.getSatisfaction();
-
         customer.getTable().free();
-        customer.setTable(null);
     }
 
-    /**
-     * Customers still waiting for service lose satisfaction; those reaching 0 leave.
-     * Returns the customers who left.
-     */
+    /** End of turn: unserved customers lose satisfaction. Returns those who reached 0 and left. */
     public List<Customer> applyWaitingLoss() {
-        List<Customer> leftCustomers = new ArrayList<Customer>();
-
+        List<Customer> left = new ArrayList<>();
         for (Customer c : customers) {
             if (c.isWaitingForService()) {
                 c.loseSatisfaction();
-
                 if (c.getSatisfaction() == 0) {
                     removeUnhappyCustomer(c);
-                    leftCustomers.add(c);
+                    left.add(c);
                 }
             }
         }
-
-        return leftCustomers;
+        return left;
     }
 
-    /**
-     * Marks the customer LEFT, cancels any order, frees their table and removes them from the waiting queue.
-     */
     private void removeUnhappyCustomer(Customer c) {
         c.setStatus(CustomerStatus.LEFT);
-
         if (c.getOrder() != null) {
             c.getOrder().cancel();
         }
-
         if (c.getTable() != null) {
             c.getTable().free();
-            c.setTable(null);
         }
-
         waitingQueue.remove(c);
         leftCount++;
     }
 
     public List<Customer> getCustomersWithStatus(CustomerStatus status) {
-        List<Customer> matchingCustomers = new ArrayList<Customer>();
-
+        List<Customer> result = new ArrayList<>();
         for (Customer c : customers) {
             if (c.getStatus() == status) {
-                matchingCustomers.add(c);
+                result.add(c);
             }
         }
-
-        return matchingCustomers;
+        return result;
     }
 
-    /**
-     * Customers whose order is READY.
-     */
+    /** Customers whose order is READY and can be served by the Waiter. */
     public List<Customer> getCustomersReadyToServe() {
-        List<Customer> readyCustomers = new ArrayList<Customer>();
-
+        List<Customer> result = new ArrayList<>();
         for (Customer c : customers) {
-            if (c.getOrder() != null
-                    && c.getOrder().getStatus() == OrderStatus.READY) {
-                readyCustomers.add(c);
+            if (c.getOrder() != null && c.getOrder().getStatus() == OrderStatus.READY) {
+                result.add(c);
             }
         }
-
-        return readyCustomers;
+        return result;
     }
 
-    /**
-     * Orders that are still PREPARING.
-     */
+    /** Orders that the Chef can still work on. */
     public List<Order> getOrdersInKitchen() {
-        List<Order> kitchenOrders = new ArrayList<Order>();
-
+        List<Order> result = new ArrayList<>();
         for (Customer c : customers) {
-            Order order = c.getOrder();
-
-            if (order != null && order.getStatus() == OrderStatus.PREPARING) {
-                kitchenOrders.add(order);
+            if (c.getOrder() != null && c.getOrder().getStatus() == OrderStatus.PREPARING) {
+                result.add(c.getOrder());
             }
         }
-
-        return kitchenOrders;
+        return result;
     }
 
-    /**
-     * Average satisfaction of paid customers, or -1 if no one has paid.
-     */
+    /** Average satisfaction of paid customers, or -1 if nobody has paid yet. */
     public double getAverageSatisfaction() {
         if (paidCount == 0) {
             return -1;
         }
-
         return (double) totalPaidSatisfaction / paidCount;
     }
 
@@ -255,24 +176,19 @@ public class Restaurant {
         return paidCount;
     }
 
-    public int getLeftCount() {
-        return leftCount;
-    }
-
-    /**
-     * Number of customers who have been served so far.
-     */
+    /** Customers who have been served their food (including those who have paid since). */
     public int getServedCount() {
         int count = 0;
-
         for (Customer c : customers) {
-            if (c.getStatus() == CustomerStatus.SERVED
-                    || c.getStatus() == CustomerStatus.READY_TO_PAY
-                    || c.getStatus() == CustomerStatus.PAID) {
+            CustomerStatus s = c.getStatus();
+            if (s == CustomerStatus.SERVED || s == CustomerStatus.READY_TO_PAY || s == CustomerStatus.PAID) {
                 count++;
             }
         }
-
         return count;
+    }
+
+    public int getLeftCount() {
+        return leftCount;
     }
 }
