@@ -7,6 +7,7 @@ import java.util.List;
 public class Restaurant {
 
     private Menu menu = new Menu();
+    private HappyHour happyHour = new HappyHour();
     private List<Table> tables = new ArrayList<>();
     private List<Customer> waitingQueue = new ArrayList<>();
     private List<Customer> readyToPay = new ArrayList<>(); // oldest first
@@ -89,6 +90,19 @@ public class Restaurant {
         customer.getTable().free();
     }
 
+    public List<Customer> recoverWaitingCustomers(int amount) {
+        List<Customer> recoveredCustomers = new ArrayList<Customer>();
+
+        for (Customer c : customers) {
+            if (c.isWaitingForService()) {
+                c.recover(amount);
+                recoveredCustomers.add(c);
+            }
+        }
+
+        return recoveredCustomers;
+    }
+
     /** End of turn: unserved customers lose satisfaction. Returns those who reached 0 and left. */
     public List<Customer> applyWaitingLoss() {
         List<Customer> left = new ArrayList<>();
@@ -158,6 +172,10 @@ public class Restaurant {
 
     public Menu getMenu() {
         return menu;
+    }
+
+    public HappyHour getHappyHour() {
+        return happyHour;
     }
 
     public List<Table> getTables() {
