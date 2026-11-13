@@ -214,3 +214,4 @@ public class GameController {
         ui.showResult(paidOk && revenueOk && satisfactionOk, restaurant, lines);
     }
 }
+
