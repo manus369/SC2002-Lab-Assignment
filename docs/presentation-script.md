@@ -7,10 +7,10 @@ The professor wants the focus on **design, OODP and SOLID, and the change map pe
 | Part | Segment | Speaker | Length | Required video segments covered |
 |---|---|---|---|---|
 | 1 | Overview slide + gameplay demo | **Benjamin** | 4:00 | 1 launch · 2 manager choices + staff constraint · 3 READY→SERVED→paid · 4 VIP/Critic · 5 Stage 3 feature · 6 victory and defeat |
-| 2 | Architecture and the Stage 1 design | Member A | 2:30 | 7 diagrams |
-| 3 | Stage 1 → 2: polymorphism and change map 1 | Member B | 2:00 | 7 tag comparison + diagrams |
-| 4 | Stage 2 → 3: final design and change map 2 | Member C | 2:15 | 7 tag comparison + diagrams |
-| 5 | Use case and sequence diagram | Member D | 2:00 | — (sequence diagram) |
+| 2 | Architecture and the Stage 1 design | **Joel** | 2:30 | 7 diagrams |
+| 3 | Stage 1 → 2: polymorphism and change map 1 | **Jeun Gwong** | 2:00 | 7 tag comparison + diagrams |
+| 4 | Stage 2 → 3: final design and change map 2 | **Eswaran** | 2:15 | 7 tag comparison + diagrams |
+| 5 | Use case and sequence diagram | **Jun Yu** | 2:00 | — (sequence diagram) |
 | 6 | Individual reflections (5 × about 40 s) | each member | 3:20 | — |
 | | **Total** | | **≈ 16:00** | |
 
