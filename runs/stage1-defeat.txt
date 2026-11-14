@@ -1,0 +1,63 @@
+# Stage 1 defeat run: same choices as stage1-victory.txt for turns 1-12,
+# then the manager stops assigning staff. Only 3 customers pay.
+# Usage: java -cp out rush.Main --echo < runs/stage1-defeat.txt
+# Turn 1
+1
+1
+0
+# Turn 2
+2
+1
+1
+# Turn 3
+3
+1
+0
+# Turn 4
+1
+2
+0
+# Turn 5
+2
+2
+2
+# Turn 6
+3
+2
+0
+# Turn 7
+1
+3
+0
+# Turn 8
+2
+3
+3
+# Turn 9
+0
+3
+# Turn 10
+3
+3
+0
+# Turn 11
+1
+4
+0
+# Turn 12: C3 pays. C4's Salad is READY...
+2
+4
+4
+# Turns 13-18: ...but the Waiter never serves it and nobody new is seated.
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0

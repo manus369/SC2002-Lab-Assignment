@@ -1,0 +1,228 @@
+@startuml stage3-sequence
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam sequenceMessageAlign left
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 260
+skinparam sequence {
+  ParticipantBorderColor #33475B
+  LifeLineBorderColor #8899AA
+  GroupBorderColor #33475B
+  GroupBackgroundColor #EEF3F7
+}
+skinparam note {
+  BackgroundColor #FFF8DC
+  BorderColor #B8A04A
+}
+
+title Stage 3 use case: a VIP orders a combo during Happy Hour and is served, eats and pays\n(replay: runs/stage3-victory.txt, turns 7-12 and the result check after turn 18)
+
+actor Manager
+boundary ":ConsoleUI" as ui
+control ":GameController" as gc
+entity ":Restaurant" as r
+entity ":HappyHour" as hh
+participant ":Host" as host
+participant ":Waiter" as waiter
+participant ":Chef" as chef
+participant ":Cashier" as cashier
+entity "t1:Table" as t
+entity ":Menu" as menu
+
+note over ui, menu
+  <b>Starting conditions</b> (start of turn 7): C1 has paid, C2 (Critic) is eating at Table 2,
+  Table 1 is free, Happy Hour is still available, the queue is empty.
+  <b>Outcome</b>: C3 (VIP) pays $17.50 (instead of $24.30) with satisfaction 90 on turn 12; game ends in VICTORY.
+end note
+
+== Turn 7: arrival, Happy Hour, seating, order, first prep unit ==
+
+gc -> host : startTurn()
+gc -> waiter : startTurn()
+gc -> chef : startTurn()
+gc -> cashier : startTurn()
+
+opt isArrivalTurn(7)
+  create entity "c3:VIPCustomer" as c3
+  gc -> c3 : <<create>> createCustomer(3) -> VIPCustomer(3, 7)
+  gc -> r : addCustomer(c3)
+  note right of r : c3 joins customers and waitingQueue\n(status WAITING, satisfaction 100)
+end
+gc -> ui : showTurnState(restaurant)
+
+gc -> hh : isAvailable()
+hh --> gc : true
+gc -> ui : readYesNo("Start Happy Hour now?")
+ui -> Manager : prompt
+Manager --> ui : "y"
+ui --> gc : true
+alt manager switches Happy Hour on
+  gc -> hh : activate()
+  note right of hh : used = true\nturnsLeft = 2
+else manager declines (or Happy Hour already used)
+  note over gc : no discount, no recovery
+end
+opt hh.isActive()
+  gc -> r : recoverWaitingCustomers(15)
+  loop for each customer c with c.isWaitingForService()
+    r -> c3 : recover(15)
+    note right of c3 : min(100, 100 + 15) = 100
+  end
+end
+
+group Host step
+  loop until a valid choice or 0 (wait)
+    gc -> ui : readInt("Host: seat which queued customer?")
+    Manager --> ui : 3
+    gc -> r : findCustomer(3)
+    r --> gc : c3
+    gc -> host : seatCustomer(c3, restaurant)
+    host -> host : checkCanWork()
+    host -> r : seatCustomer(c3)
+    alt c3 not WAITING, or findFreeTable() == null
+      r --> host : throw InvalidActionException(reason)
+      host --> gc : (propagates)
+      gc -> ui : showError(reason)
+      note over gc : task not used up; ask again
+    else valid
+      r -> t : seat(c3)
+      r -> c3 : setTable(t1); setStatus(SEATED)
+      host -> host : finishTask()
+    end
+  end
+end
+
+group Waiter step (task 2 = take order)
+  gc -> ui : readInt(task) / readInt(customer)
+  Manager --> ui : 2, then 3
+  gc -> r : findCustomer(3)
+  r --> gc : c3
+  gc -> waiter : takeOrder(c3, menu, happyHour)
+  waiter -> waiter : checkCanWork()
+  opt c3.getStatus() != SEATED
+    waiter --> gc : throw InvalidActionException
+  end
+  waiter -> c3 : chooseItem(menu)
+  c3 -> menu : getDish(3 - 1)
+  menu --> c3 : Pasta
+  c3 -> menu : findComboWith(Pasta)
+  menu --> c3 : Salad + Pasta Combo ($24.30, 3 units)
+  alt satisfaction >= COMBO_SATISFACTION (90)
+    c3 --> waiter : combo
+  else
+    c3 --> waiter : Pasta
+  end
+  waiter -> c3 : applyDiscount(2430)
+  note right of c3 : <b>polymorphic</b>: VIPCustomer override\n2430 x 0.9 = 2187
+  c3 --> waiter : 2187
+  waiter -> hh : applyDiscount(2187)
+  note right of hh : [isActive()] 2187 x 0.8 = 1750\nVIP discount first, then Happy Hour
+  hh --> waiter : 1750
+  create entity "o3:Order" as o
+  waiter -> o : <<create>> Order(c3, combo, 1750)
+  note right of o : price locked when the order is taken\nstatus PREPARING, 0/3
+  waiter -> c3 : setOrder(o3); setStatus(ORDERED)
+  waiter -> waiter : finishTask()
+end
+
+group Chef step
+  gc -> ui : readInt("Chef: prepare whose order?")
+  Manager --> ui : 3
+  gc -> chef : prepare(o3)
+  chef -> chef : checkCanWork()
+  chef -> o : prepareOneUnit()
+  note right of o : 1/3
+  chef -> chef : finishTask()
+end
+
+gc -> cashier : collectPayment(restaurant)
+note right of gc : C2 pays this turn (not expanded)
+gc -> r : finishEating(7)
+gc -> r : applyWaitingLoss()
+loop for each customer c
+  opt c.isWaitingForService()
+    r -> c3 : loseSatisfaction()
+    c3 -> c3 : getSatisfactionLoss()
+    note right of c3 : <b>polymorphic</b>: VIP loses 5\n100 -> 95
+    opt satisfaction == 0
+      r -> r : removeUnhappyCustomer(c)
+    end
+  end
+end
+gc -> hh : endTurn()
+note right of hh : turnsLeft = 1
+gc -> ui : showEndOfTurn(...)
+
+== Turns 8-9: kitchen (Happy Hour still active on turn 8: c3 recovers 95 -> 100, then loses 5) ==
+
+loop turns 8 and 9
+  gc -> chef : prepare(o3)
+  chef -> o : prepareOneUnit()
+  opt unitsDone >= item.getPrepUnits()
+    note right of o : status = READY (turn 9)
+  end
+end
+note over gc : end of turn 9: Happy Hour over; c3 satisfaction 90
+
+== Turn 10: staff constraint - the manager's choice changes the outcome ==
+
+note over Manager, gc
+  C4 arrives; Host seats C4. The Waiter can do ONE task:
+  serve C3 (READY) or take C4's order. The manager chooses to serve C3,
+  so C3 stops losing satisfaction and pays with 90. (Taking C4's order first
+  would cost C3 another 5 points and delay revenue by a turn.)
+end note
+gc -> ui : readInt(task) / readInt(customer)
+Manager --> ui : 3, then 3
+gc -> waiter : serve(c3, 10)
+waiter -> o : getStatus()
+alt status != READY
+  waiter --> gc : throw InvalidActionException("no READY order")
+else READY
+  waiter -> o : markServed()
+  waiter -> c3 : setStatus(SERVED); setServedTurn(10)
+end
+gc -> r : applyWaitingLoss()
+note right of r : c3.isWaitingForService() == false\n-> no loss while eating
+
+== Turn 11: eating ==
+
+gc -> r : finishEating(11)
+opt c3 is SERVED and servedTurn (10) < 11
+  r -> c3 : setStatus(READY_TO_PAY)
+  note right of r : c3 added to readyToPay (oldest first)
+end
+
+== Turn 12: payment (Cashier runs before finishEating, so it pays a turn later) ==
+
+gc -> cashier : collectPayment(restaurant)
+cashier -> r : nextToPay()
+r --> cashier : c3
+opt not isDoneThisTurn() and customer != null
+  cashier -> o : markPaid()
+  cashier -> c3 : setStatus(PAID)
+  cashier -> r : recordPayment(c3)
+  note right of r : revenueCents += 1750\npaidCount++\ntotalPaidSatisfaction += 90
+  r -> t : free()
+  cashier -> cashier : finishTask()
+end
+cashier --> gc : c3
+gc -> ui : showMessage("Cashier collects $17.50 from C3 (VIP)...")
+
+== After turn 18: result check ==
+
+gc -> r : getPaidCount()
+r --> gc : 5
+gc -> r : getRevenueCents()
+r --> gc : 10030
+gc -> r : getAverageSatisfaction()
+r --> gc : 80.4
+alt paid >= 4 and revenue >= 4500 and average >= 60
+  gc -> ui : showResult(true, restaurant, lines)
+  ui -> Manager : "VICTORY! All targets met."
+else any target missed
+  gc -> ui : showResult(false, restaurant, lines)
+  ui -> Manager : "DEFEAT. Not every target was met."
+end
+@enduml

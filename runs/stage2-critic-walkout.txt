@@ -1,0 +1,71 @@
+# Stage 2 run that shows the Critic's impatience: the manager never serves C2 (Critic).
+# C2 loses 12 per turn and leaves without paying at the end of turn 12.
+# Usage: java -cp out rush.Main --echo < runs/stage2-critic-walkout.txt
+# Turn 1
+1
+1
+0
+# Turn 2
+2
+1
+1
+# Turn 3
+3
+1
+0
+# Turn 4: C2 (Critic) arrives - ignored.
+0
+0
+# Turn 5
+0
+0
+# Turn 6
+0
+0
+# Turn 7: C3 (VIP) arrives. Seat C3.
+1
+3
+0
+# Turn 8: VIP orders Pasta for $16.20.
+2
+3
+3
+# Turn 9
+0
+3
+# Turn 10: C4 arrives. Serve C3.
+3
+3
+0
+# Turn 11: seat C4.
+1
+4
+0
+# Turn 12: take C4's order. C2 reaches 0 and leaves (unhappy departure).
+2
+4
+4
+# Turn 13
+3
+4
+0
+# Turn 14
+1
+5
+0
+# Turn 15
+2
+5
+5
+# Turn 16
+3
+5
+0
+# Turn 17
+1
+6
+0
+# Turn 18
+2
+6
+6

@@ -1,0 +1,22 @@
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam packageStyle rectangle
+skinparam linetype polyline
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #33475B
+  ArrowColor #33475B
+}
+skinparam note {
+  BackgroundColor #FFF8DC
+  BorderColor #B8A04A
+}
+skinparam legend {
+  BackgroundColor #F7F7F7
+  BorderColor #999999
+}
+hide empty members

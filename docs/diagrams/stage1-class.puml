@@ -1,0 +1,271 @@
+@startuml stage1-class
+!include _style.iuml
+title Restaurant Rush - Stage 1 class diagram (tag stage-1)
+
+package "rush" {
+  class Main {
+    + {static} main(args : String[]) : void
+  }
+}
+
+package "rush.boundary" {
+  class ConsoleUI <<boundary>> {
+    - scanner : Scanner
+    - echo : boolean
+    + ConsoleUI(echo : boolean)
+    + showWelcome(r : Restaurant, maxTurns : int) : void
+    + showTurnHeader(turn : int, maxTurns : int) : void
+    + showTurnState(r : Restaurant) : void
+    - showStaffTasks(r : Restaurant) : void
+    + showMessage(msg : String) : void
+    + showError(msg : String) : void
+    + readInt(prompt : String, min : int, max : int) : int
+    + readYesNo(prompt : String) : boolean
+    - readLine() : String
+    + showEndOfTurn(turn : int, maxTurns : int, r : Restaurant) : void
+    + showResult(victory : boolean, r : Restaurant, lines : String[]) : void
+    + formatAverage(avg : double) : String
+  }
+}
+
+package "rush.control" {
+  class GameController <<control>> {
+    + {static} MAX_TURNS : int = 18
+    + {static} TABLES : int = 2
+    + {static} ARRIVAL_TURNS : int[] = {1,4,7,10,13,16}
+    + {static} TARGET_PAID : int = 4
+    + {static} TARGET_REVENUE_CENTS : int = 4500
+    + {static} TARGET_SATISFACTION : int = 60
+    - turn : int
+    - nextCustomerId : int
+    + GameController(ui : ConsoleUI)
+    + play() : void
+    - playTurn() : void
+    - isArrivalTurn(turn : int) : boolean
+    - createCustomer(id : int) : Customer
+    - waiterStep() : void
+    - chefStep() : void
+    - showResult() : void
+  }
+}
+
+package "rush.entity" {
+
+  class Restaurant {
+    - revenueCents : int
+    - paidCount : int
+    - totalPaidSatisfaction : int
+    - leftCount : int
+    + Restaurant(numberOfTables : int)
+    + addCustomer(c : Customer) : void
+    + findCustomer(id : int) : Customer
+    + findFreeTable() : Table
+    + seatCustomer(c : Customer) : void
+    + finishEating(turn : int) : List<Customer>
+    + nextToPay() : Customer
+    + recordPayment(c : Customer) : void
+    + applyWaitingLoss() : List<Customer>
+    - removeUnhappyCustomer(c : Customer) : void
+    + getCustomersWithStatus(s : CustomerStatus) : List<Customer>
+    + getCustomersReadyToServe() : List<Customer>
+    + getOrdersInKitchen() : List<Order>
+    + getAverageSatisfaction() : double
+    + getMenu() : Menu
+    + getTables() : List<Table>
+    + getWaitingQueue() : List<Customer>
+    + getRevenueCents() : int
+    + getPaidCount() : int
+    + getServedCount() : int
+    + getLeftCount() : int
+  }
+
+  class Table {
+    - number : int
+    + Table(number : int)
+    + getNumber() : int
+    + getCustomer() : Customer
+    + isFree() : boolean
+    + seat(c : Customer) : void
+    + free() : void
+  }
+
+
+  abstract class Staff {
+    - role : String
+    - doneThisTurn : boolean
+    + Staff(role : String)
+    + getRole() : String
+    + startTurn() : void
+    + isDoneThisTurn() : boolean
+    # checkCanWork() : void
+    # finishTask() : void
+  }
+
+  class Waiter {
+    + seatCustomer(c : Customer, r : Restaurant) : void
+    + takeOrder(c : Customer, m : Menu) : Order
+    + serve(c : Customer, turn : int) : void
+  }
+  class Chef {
+    + prepare(o : Order) : void
+  }
+  class Cashier {
+    + collectPayment(r : Restaurant) : Customer
+  }
+
+  abstract class Customer {
+    + {static} MAX_SATISFACTION : int = 100
+    - id : int
+    - arrivalTurn : int
+    - satisfaction : int
+    - servedTurn : int
+    + Customer(id : int, arrivalTurn : int)
+    + {abstract} getType() : String
+    + {abstract} getSatisfactionLoss() : int
+    + chooseItem(m : Menu) : MenuItem
+    + isWaitingForService() : boolean
+    + loseSatisfaction() : void
+    + getSatisfaction() : int
+    + getStatus() / setStatus(s : CustomerStatus)
+    + getTable() / setTable(t : Table)
+    + getOrder() / setOrder(o : Order)
+    + getServedTurn() / setServedTurn(turn : int)
+  }
+  class RegularCustomer {
+    + getType() : String
+    + getSatisfactionLoss() : int
+  }
+
+  class Order {
+    - priceCents : int
+    - unitsDone : int
+    + Order(c : Customer, item : MenuItem, priceCents : int)
+    + prepareOneUnit() : void
+    + markServed() : void
+    + markPaid() : void
+    + cancel() : void
+    + getCustomer() : Customer
+    + getItem() : MenuItem
+    + getPriceCents() : int
+    + getStatus() : OrderStatus
+    + getProgress() : String
+  }
+
+  class Menu {
+    + Menu()
+    + getDishes() : List<MenuItem>
+    + getDish(index : int) : MenuItem
+  }
+
+  class MenuItem {
+    - name : String
+    - priceCents : int
+    - prepUnits : int
+    + MenuItem(name : String, priceCents : int, prepUnits : int)
+    + getName() : String
+    + getPriceCents() : int
+    + getPrepUnits() : int
+  }
+
+
+  class Money <<utility>> {
+    + {static} format(cents : int) : String
+    + {static} multiply(cents : int, factor : double) : int
+  }
+
+  enum CustomerStatus {
+    WAITING
+    SEATED
+    ORDERED
+    SERVED
+    READY_TO_PAY
+    PAID
+    LEFT
+  }
+
+  enum OrderStatus {
+    PREPARING
+    READY
+    SERVED
+    PAID
+    CANCELLED
+  }
+
+  class InvalidActionException {
+    + InvalidActionException(msg : String)
+  }
+}
+
+class Exception <<java.lang>>
+
+' ---------- creation / boundary-control ----------
+Main ..> GameController : <<create>>
+Main ..> ConsoleUI : <<create>>
+GameController --> "1" ConsoleUI : - ui
+ConsoleUI ..> Restaurant : reads state
+
+' ---------- control owns the game objects ----------
+GameController *-- "1" Restaurant : - restaurant
+GameController *-- "1" Waiter : - waiter
+GameController *-- "1" Chef : - chef
+GameController *-- "1" Cashier : - cashier
+GameController ..> Customer : <<create>> via createCustomer()
+
+' ---------- restaurant composition ----------
+Restaurant *-- "1" Menu : - menu
+Restaurant *-- "2..*" Table : - tables
+Restaurant o-- "0..*" Customer : - customers\n- waitingQueue\n- readyToPay
+
+Table "0..1" -- "0..1" Customer : seats >
+Customer "1" -- "0..1" Order : places >
+Order --> "1" MenuItem : - item
+Customer --> "1" CustomerStatus : - status
+Order --> "1" OrderStatus : - status
+
+' ---------- menu ----------
+Menu *-- "3" MenuItem : - dishes
+
+' ---------- inheritance ----------
+Staff <|-- Waiter
+Staff <|-- Chef
+Staff <|-- Cashier
+Customer <|-- RegularCustomer
+Exception <|-- InvalidActionException
+
+' ---------- dependencies ----------
+Waiter ..> Restaurant
+Waiter ..> Order : <<create>>
+Cashier ..> Restaurant
+Chef ..> Order
+Staff ..> InvalidActionException : <<throws>>
+
+' ---------- OO annotations ----------
+note top of Staff
+  <b>Encapsulation</b>: doneThisTurn is private and only
+  changed through protected checkCanWork() / finishTask().
+  Every subclass must go through them, so no staff member
+  can do two tasks in one turn, and a failed (invalid)
+  action never uses up the task.
+end note
+
+note bottom of Customer
+  <b>Abstraction / polymorphism</b>: Customer is abstract.
+  getSatisfactionLoss() and getType() are abstract and
+  RegularCustomer implements them (loss 8).
+  Restaurant.applyWaitingLoss() only calls
+  c.loseSatisfaction() on a Customer reference.
+  chooseItem(): customer n orders dish (n-1) mod 3.
+end note
+
+
+note bottom of Restaurant
+  <b>Composition</b>: Restaurant creates and owns its Tables
+  and Menu; they live and die with it.
+end note
+
+legend right
+  Stage 1 baseline: Regular customers, 3 dishes, Waiter / Chef / Cashier, 2 tables,
+  18 turns, satisfaction loss, abandonment, payment, victory / defeat.
+  Getters/setters are listed in short form; toString() is omitted.
+endlegend
+@enduml

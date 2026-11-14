@@ -1,0 +1,66 @@
+# Stage 3 defeat run: Happy Hour is wasted on turn 1 (nobody is waiting yet, so it gives
+# only one discounted order), and the manager lets the Host idle and serves late.
+# Usage: java -cp out rush.Main --echo < runs/stage3-defeat.txt
+# Turn 1: Happy Hour switched on too early. Host idles; Waiter seats C1.
+y
+0
+1
+1
+0
+# Turn 2: take C1's order (satisfaction 92 -> combo, Happy Hour price). Chef 1/2.
+0
+2
+1
+1
+# Turn 3: Chef 2/2.
+0
+0
+1
+# Turn 4: C2 (Critic) arrives. Waiter serves C1; nobody seats the Critic.
+0
+3
+1
+0
+# Turns 5-18: the manager stops assigning staff.
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
