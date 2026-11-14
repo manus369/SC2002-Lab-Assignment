@@ -285,7 +285,9 @@ note right of CriticCustomer
 end note
 
 legend right
-  <back:#DFF5E1>   </back> new in Stage 2    <back:#FFF4CC>   </back> changed in Stage 2
+  <b><size:16>Change map, Stage 1 → 2 (18 → 20 classes)</size></b>
+  <b><size:15>2 added · 10 modified (5 for the feature + 5 cleanup only) · 8 unchanged</size></b>
+  <back:#DFF5E1>   </back> new in Stage 2    <back:#FFF4CC>   </back> changed in Stage 2 (feature changes)
   Changes: Customer (+applyDiscount(), default = full price), Menu (+getDishWithMostPrepUnits()),
   Waiter (takeOrder() bills customer.applyDiscount(price)), GameController (createCustomer():
   C2 = Critic, C3 = VIP), ConsoleUI (shows each customer's loss per waiting turn)
