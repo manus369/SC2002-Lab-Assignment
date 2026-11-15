@@ -281,7 +281,7 @@ Roles follow the Stage 1 work split (see [Benjamin's Stage 1 AI history](ai-hist
 | Jun Yu | `cake313` | P2 · game flow | [`5b3b079`] `GameController`, [`464edd3`] `Main` on [`cake313-patch-1`] ([PR #3]) | — | [`fce695b`] `happyHourStep()`, `hostStep()` in `GameController` ([PR #6]) · [`50efa92`], [`74b76d7`] `Main`, `GameController` (direct) |
 | Eswaran | `Waran-cell` | Stage 3 integration | — | — | [`622b8c0`] `ConsoleUI` · [`23abe96`] `GameController` · [`dd13c0a`] `Customer` · [`5def0ad`] `HappyHour` · [`2817bfc`] `Menu` · [`7219b6b`] `Restaurant` (direct) |
 
-The source code in the `stage-3` tag is identical to the tree at Eswaran's last commit, [`7219b6b`]. In between, Benjamin's [`9d2d36a`] removed the encapsulation tidy-up described under Joel in 9.3, and [`9c85cd7`] put it back.
+The source code in the `stage-3` tag is identical to the tree at Eswaran's last commit, [`7219b6b`]. In between, Benjamin's [`9d2d36a`] removed an encapsulation tidy-up (read-only getters, `final` fields), and [`9c85cd7`] put it back.
 
 ### 9.2 AI conversation history
 
@@ -299,34 +299,34 @@ Every member's AI history is in the [`ai-history/`](ai-history) folder, one fold
 
 **Benjamin**
 
-| Chat | What the AI did | Where it shows in the repository |
+| Chat | What the AI did | Commit |
 |---|---|---|
-| [Stage 1: skeleton and work split](ai-history/stage-1/Benjamin.md) | Generated the package and class skeleton with TODOs, and proposed the P1 to P5 split by area | The first commit, [`67c95ce`]. Each member then filled in their area: [PR #1], [PR #2], [PR #3], [`ebccbbb`], [`455279c`]. |
-| [Stage 3: UML diagrams](ai-history/stage-3/benjamin_diagrams.md) | Drew the three class diagrams and the Stage 3 sequence diagram from the code at each tag, rendered them with PlantUML, worked out the change-map counts, then added those counts to the diagram legends | [`docs/diagrams/`](docs/diagrams) was added in [`9c85cd7`]. The legend counts were added in [`41efb4f`], the commit the `stage-3` tag points to. |
-| [Stage 3: README](ai-history/stage-3/benjamin_readme.md) | Traced every member's AI chat to the commits, branches and pull requests above, and rewrote this section | This Section 9 and the `ai-history/` entry in Section 10 |
+| [Stage 1: skeleton and work split](ai-history/stage-1/Benjamin.md) | Generated the class skeleton and proposed the P1 to P5 work split | [`67c95ce`] |
+| [Stage 3: UML diagrams](ai-history/stage-3/benjamin_diagrams.md) | Drew the class and sequence diagrams and worked out the change maps | [`9c85cd7`], [`41efb4f`] |
+| [Stage 3: README](ai-history/stage-3/benjamin_readme.md) | Linked each AI chat to its commits and rewrote Section 9 | This README |
 
 **Joel**
 
-| Chat | What the AI did | Where it shows in the repository |
+| Chat | What the AI did | Commit |
 |---|---|---|
-| [Stage 1: Git push and pull request help][joel-s1] | Explained `git push`, the 403 error for the `Baquaaa` account, and how to push a branch and open a pull request for commit `aafd4b0` "Improve code readability and encapsulation" | Joel filed this under Stage 1, but `aafd4b0` was made in the team's separate working repository (`manus369/sc2002-lab-poject`) after Stage 3: its suggested PR text cites the Stage 3 victory and defeat tests. The same changes (`StringBuilder` in `ConsoleUI`, `final` fields in `GameController`, `Customer` and `Restaurant`, read-only `getTables()` / `getWaitingQueue()`, clearing a customer's table reference) reached this repository with Eswaran's copy ([`622b8c0`] to [`7219b6b`]). [`9d2d36a`] removed them and [`9c85cd7`] restored them, with the same four files and +40/−25 lines as `aafd4b0` in the chat, plus a blank line in `Main`. Joel's actual Stage 1 code is [`1f4a6e6`] ([PR #2]); no AI chat was provided for it. |
-| [Stage 2: compatibility checks][joel-s2] | Confirmed that `Restaurant.applyWaitingLoss()` already handles VIP and Critic through the overridden `getSatisfactionLoss()`, so P1 needs no Stage 2 change, and gave a test checklist | Joel has no Stage 2 commit. The only Stage 2 edits to `Restaurant` and `Table` are comment and formatting cleanup in [`51204d2`] (see Section 4.1). |
-| [Stage 3: Happy Hour code review][joel-s3a] | Reviewed `HappyHour.java` and `recoverWaitingCustomers()`, and flagged that `Customer.recover()` did not exist yet | Benjamin added `Customer.recover()` in [`683f9f1`], two minutes after Joel's commit. |
-| [Stage 3: pushing to `main`][joel-s3b] | Gave the commands to commit and push directly to `main` with the message "Implement Happy Hour and satisfaction recovery" | [`b1d2b17`], with that exact message, adds `HappyHour.java` and changes `Restaurant.java`. The controller calls the AI said were still needed (recovery at the start of an active turn, `endTurn()`) were added by Jun Yu in [`fce695b`] ([PR #6]). |
+| [Stage 1: Git push and pull request help][joel-s1] | Explained how to push a branch and open a pull request | [`1f4a6e6`] ([PR #2]) |
+| [Stage 2: compatibility checks][joel-s2] | Confirmed `Restaurant` already handles VIP and Critic, so no Stage 2 change was needed | No change needed |
+| [Stage 3: Happy Hour code review][joel-s3a] | Reviewed `HappyHour` and `recoverWaitingCustomers()` | [`b1d2b17`] |
+| [Stage 3: pushing to `main`][joel-s3b] | Gave the commands to commit and push to `main` | [`b1d2b17`] |
 
 **Jeun Gwong**
 
-| Chat | What the AI did | Where it shows in the repository |
+| Chat | What the AI did | Commit |
 |---|---|---|
-| [Stage 1: P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | Reviewed `Staff`, `Waiter`, `Chef`, `Cashier` and `Order`. Pointed out that `Order.markServed()`, `markPaid()` and `prepareOneUnit()` do not check the current status. | [`955c463`] on [`p4-stage-1-staff-orders`] ([PR #1]). `Order` was kept as it is (it is unchanged in all three stages); the status checks stay in `Waiter.serve()`, `Chef.prepare()` and `Restaurant.nextToPay()`. |
-| [Stage 2: `takeOrder()` polymorphism](ai-history/stage-2/Jeun%20Gwong.md) | Confirmed that `customer.chooseItem()` and `customer.applyDiscount()` dispatch on the real customer type, so a new customer type needs no change to `Waiter` | [`9d263f4`] on [`chanjg2004-p4-stage2`] ([PR #4]) is exactly the two lines discussed in the chat |
-| [Stage 3: `Host` and Stage 2 → 3 diff](ai-history/stage-3/Jeun%20Gwong.md) | Confirmed that `Host` reuses `Staff`'s one-task rule with its own flag, and that the Happy Hour discount is applied after the customer's discount. Noted that Happy Hour recovery and timing had to come from other classes. | [`e0bb219`] on [`bob_stage3`] ([PR #5]) adds `Host.java` and `takeOrder(…, HappyHour)`. Recovery is Joel's [`b1d2b17`]; the turn timing is in Jun Yu's `happyHourStep()` ([`fce695b`]). |
+| [Stage 1: P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | Reviewed `Staff`, `Waiter`, `Chef`, `Cashier` and `Order` | [`955c463`] ([PR #1]) |
+| [Stage 2: `takeOrder()` polymorphism](ai-history/stage-2/Jeun%20Gwong.md) | Confirmed the VIP discount works through polymorphism, with no change to `Waiter` needed for new customer types | [`9d263f4`] ([PR #4]) |
+| [Stage 3: `Host` and Stage 2 → 3 diff](ai-history/stage-3/Jeun%20Gwong.md) | Checked `Host` and the order of the customer and Happy Hour discounts | [`e0bb219`] ([PR #5]) |
 
 **Eswaran**
 
-| Chat | What the AI did | Where it shows in the repository |
+| Chat | What the AI did | Commit |
 |---|---|---|
-| [Stage 3: copying Stage 3 in](ai-history/stage-3/Eswaran.md) | Compared the working repository with this one and updated six Stage 3 files; checked that `Waiter`, `Host` and `ComboMeal` were already up to date | Six direct commits on 14 November, one per file the chat lists: [`622b8c0`] `ConsoleUI`, [`23abe96`] `GameController`, [`dd13c0a`] `Customer`, [`5def0ad`] `HappyHour`, [`2817bfc`] `Menu`, [`7219b6b`] `Restaurant`. `Waiter`, `Host` and `ComboMeal` came earlier from [`e0bb219`] and [`683f9f1`]. As the chat says, no documentation was pushed: the docs came from [`9c85cd7`] and [`41efb4f`]. |
+| [Stage 3: copying Stage 3 in](ai-history/stage-3/Eswaran.md) | Helped update six Stage 3 files | [`622b8c0`], [`23abe96`], [`dd13c0a`], [`5def0ad`], [`2817bfc`], [`7219b6b`] |
 
 Jun Yu did not use AI.
 
