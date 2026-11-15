@@ -249,17 +249,21 @@ In each class diagram, **green** classes are new in that stage and **yellow** cl
 
 ## 8. Presentation video
 
-**Video:** `<VIDEO_LINK>` (must stay accessible to graders)
+[Watch the presentation (about 16 min)](https://youtu.be/F4B8vxBRAlk)
 
-| # | Required segment | Timestamp | Presenter |
-|---|---|---|---|
-| 1 | The game launching from the submitted project | `mm:ss` | |
-| 2 | Meaningful manager choices, including a decision where staff are constrained | `mm:ss` | |
-| 3 | A dish going READY → SERVED → payment | `mm:ss` | |
-| 4 | A VIP or Critic behaviour | `mm:ss` | |
-| 5 | A Stage 3 feature (Host / ComboMeal / Happy Hour) | `mm:ss` | |
-| 6 | One victory and one defeat | `mm:ss` | |
-| 7 | The stage tag comparisons and the diagrams | `mm:ss` | |
+| Time | Segment | Presenter |
+|---|---|---|
+| 0:00 | Overview, game rules and the three stages | Benjamin |
+| 1:01 | 1. The game launching from the submitted project | Benjamin |
+| 1:26 | 2, 5. Manager choices with the Host, Happy Hour and combo meals; invalid input | Benjamin |
+| 2:39 | 4. VIP and Critic behaviour in the Stage 3 victory run | Benjamin |
+| 3:24 | 3. A dish going READY → SERVED → payment, with the staff constraint on turn 10 (2) | Benjamin |
+| 3:57 | 6. One victory and one defeat | Benjamin |
+| 4:36 | 7. Stage 1 class diagram and the BCE design | Joel |
+| 6:40 | 7. Stage 2 design and change map | Jeun Gwong |
+| 8:36 | 7. Stage 3 design, change map and SOLID trade-offs | Eswaran |
+| 10:53 | Use case and sequence diagram | Jun Yu |
+| 12:48 | Individual contributions and learning | Everyone |
 
 ---
 
