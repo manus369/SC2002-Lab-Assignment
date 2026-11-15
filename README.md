@@ -289,7 +289,7 @@ Every member's AI history is in the [`ai-history/`](ai-history) folder, one fold
 
 | Member | AI tool | Stage 1 | Stage 2 | Stage 3 |
 |---|---|---|---|---|
-| Benjamin | Claude Code | [Skeleton and work split](ai-history/stage-1/Benjamin.md) (summary; the transcript could not be exported) | Not provided | [UML diagrams and change map](ai-history/stage-3/benjamin_diagrams.md) · [README and AI history links](ai-history/stage-3/benjamin_readme.md) |
+| Benjamin | Claude Code | [Skeleton and work split](ai-history/stage-1/Benjamin.md) (summary; the transcript could not be exported) | — | [UML diagrams and change map](ai-history/stage-3/benjamin_diagrams.md) · [README and AI history links](ai-history/stage-3/benjamin_readme.md) |
 | Joel | ChatGPT | [Git push and pull request help][joel-s1] | [Stage 2 compatibility checks][joel-s2] | [Happy Hour code review][joel-s3a] · [Pushing Stage 3 to `main`][joel-s3b] |
 | Jeun Gwong | ChatGPT | [P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | [`takeOrder()` polymorphism check](ai-history/stage-2/Jeun%20Gwong.md) | [`Host` and Stage 2 → 3 diff review](ai-history/stage-3/Jeun%20Gwong.md) |
 | Jun Yu | None (did not use AI) | — | — | — |
