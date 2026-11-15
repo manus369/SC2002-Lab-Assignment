@@ -93,18 +93,18 @@ Each tag compiles and runs on its own. Stage 1 contains no Stage 2 or Stage 3 cl
 
 | Concept | Where it shows in the code |
 |---|---|
-| **Encapsulation** | `Staff.doneThisTurn` is private and only changes through the protected `checkCanWork()` / `finishTask()`, so no staff member can do two tasks in a turn and a failed action never uses up the task. An `Order`'s price is fixed in its constructor and has no setter. Money is held as integer cents. `Restaurant` returns read-only views of its tables and queue. |
+| **Encapsulation** | `Staff.doneThisTurn` is private: only `finishTask()` sets it, `startTurn()` resets it and the protected `checkCanWork()` guards each action, so no staff member can do two tasks in a turn and a failed action never uses up the task. An `Order`'s price is fixed in its constructor and has no setter. Money is held as integer cents. `Restaurant`'s queues and totals change only through its own methods, and it returns read-only views of its tables and queue. |
 | **Inheritance** | `Staff` → `Host`, `Waiter`, `Chef`, `Cashier` · `Customer` → `RegularCustomer`, `VIPCustomer`, `CriticCustomer` · `MenuItem` → `ComboMeal` |
 | **Polymorphism** | `getSatisfactionLoss()`, `applyDiscount()` and `chooseItem()` are overridden by the customer types. `Waiter.takeOrder()` and `Restaurant.applyWaitingLoss()` call them on a `Customer` reference, and the controller has no `instanceof` checks. |
 | **Composition** | `Restaurant` creates and owns its `Table`s, `Menu` and `HappyHour`. A `ComboMeal` is built from two existing `MenuItem`s. |
 
 | Principle | How it is applied |
 |---|---|
-| **SRP** | The UI, the turn controller and the rules are separate. `Order` owns its own lifecycle (PREPARING → READY → SERVED → PAID / CANCELLED). `HappyHour` owns its own state and discount. |
-| **OCP** | New customer types and combos were added by subclassing. `Restaurant`, `Order`, `Chef` and `Cashier` did not change for them. |
+| **SRP** | The UI (input and display), the turn controller (step order and customer line-up) and the rules are separate. `Order` owns its own lifecycle (PREPARING → READY → SERVED → PAID / CANCELLED). `HappyHour` owns its own state and discount. |
+| **OCP** | New customer types and combos were added by subclassing. `Order`, `Chef`, `Cashier`, `Staff` and `MenuItem` did not change for either stage. |
 | **LSP** | A `ComboMeal` works anywhere a `MenuItem` does, so `Order` and `Chef` handle combos unchanged. VIP and Critic work anywhere a `Customer` does. |
 | **ISP** | Not applied. There are no interfaces, on purpose: the brief warns against adding interfaces just to tick a checklist. |
-| **DIP** | Partial. The controller depends on the abstract `Customer` and `Staff`, but it creates the concrete classes and `ConsoleUI` directly. This is a trade-off; a `CustomerFactory` or a UI interface would be the alternative design. |
+| **DIP** | Partial. `Restaurant`, `Waiter` and `GameController` work with customers only through the abstract `Customer` type, but `GameController` creates the concrete customers, holds each staff member by its concrete class and uses `ConsoleUI` directly. This is a trade-off; a `CustomerFactory` or a UI interface would be the alternative design. |
 
 ---
 
@@ -124,7 +124,7 @@ Reproduce with `git diff --name-status stage-1 stage-2` and `git diff --name-sta
 
 ### 4.1 Stage 1 → Stage 2 (customer behaviour)
 
-**Design effect.** Stage 1 already made `Customer` abstract, with `getSatisfactionLoss()` and `getType()` abstract and `chooseItem()` overridable. Adding two customer types therefore took two subclasses plus one new hook, `applyDiscount()`. The turn loop, `Restaurant` and the satisfaction/abandonment logic did not change. Different behaviour is dispatched through the customer objects, with no `instanceof` checks in the controller (OCP/LSP).
+**Design effect.** Stage 1 already made `Customer` abstract, with `getSatisfactionLoss()` and `getType()` abstract and `chooseItem()` overridable. Adding two customer types therefore took two subclasses plus one new hook, `applyDiscount()`. The behaviour of the turn loop, `Restaurant` and the satisfaction/abandonment logic did not change. Different behaviour is dispatched through the customer objects, with no `instanceof` checks in the controller (OCP/LSP).
 
 **New files**
 
@@ -142,7 +142,7 @@ Reproduce with `git diff --name-status stage-1 stage-2` and `git diff --name-sta
 | `entity/Waiter.java` | `takeOrder()` now bills `customer.applyDiscount(item.getPriceCents())` | The price is locked when the order is taken and now depends on the customer type |
 | `control/GameController.java` | `createCustomer()` line-up: C2 (turn 4) is a Critic, C3 (turn 7) is a VIP, the rest are Regular | Required: a reproducible run with at least one VIP and one Critic, still six arrivals. A small registration change. |
 | `boundary/ConsoleUI.java` | The waiting queue shows each customer's loss per waiting turn | Lets the manager see that customer types behave differently |
-| `entity/Restaurant.java`, `entity/Table.java`, `entity/CustomerStatus.java`, `entity/OrderStatus.java`, `entity/InvalidActionException.java` | Comment and formatting cleanup only (Javadoc shortened, field initialisers moved inline, one redundant check in `seatCustomer` simplified). No change to behaviour. | Tidy-up while integrating. Listed so the diff is fully explained; next time we would keep cleanup out of a feature change. |
+| `entity/Restaurant.java`, `entity/Table.java`, `entity/CustomerStatus.java`, `entity/OrderStatus.java`, `entity/InvalidActionException.java` | Comment and formatting cleanup (Javadoc shortened, field initialisers moved inline). `Restaurant` also dropped two defensive guards (in `seatCustomer` and `recordPayment`) and stopped clearing a customer's table reference on payment or departure; Stage 3 restored the clearing. | Tidy-up while integrating. Game behaviour is unchanged: callers already guarantee the guarded conditions and the table reference is not read after payment. Listed so the diff is fully explained; next time we would keep cleanup out of a feature change. |
 
 **Deleted files:** none.
 
@@ -265,7 +265,7 @@ In each class diagram, **green** classes are new in that stage and **yellow** cl
 
 ## 9. Team and AI history
 
-Each member's full AI conversation history is in `ai-history/stage-N/chat-XX.md` on their own branch.
+Each member's full, ordered AI conversation history is on their own branch, organised by stage (linked in the table below).
 
 | Member | Name | Area | Files | AI history |
 |---|---|---|---|---|
