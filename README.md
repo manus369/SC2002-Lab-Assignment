@@ -283,13 +283,13 @@ The source code in the `stage-3` tag is identical to the tree at Eswaran's last 
 
 Benjamin's, Eswaran's and Jeun Gwong's histories are in the [`ai-history/`](ai-history) folder on `main`, one folder per stage. Jeun Gwong added his through [PR #8] to [PR #12]. Joel's history is on his [`joel-ai-history`] branch, under `ai history/stage-N/Joel/`.
 
-| Member | AI tool | Stage 1 | Stage 2 | Stage 3 |
-|---|---|---|---|---|
-| Benjamin | Claude Code | [Skeleton and work split](ai-history/stage-1/Benjamin.md) (summary; the transcript could not be exported) | Not provided | [UML diagrams and change map](ai-history/stage-3/benjamin_diagrams.md) · [README and AI history links](ai-history/stage-3/benjamin_readme.md) |
-| Joel | Not stated | [Git push and pull request help][joel-s1] | [Stage 2 compatibility checks][joel-s2] | [Happy Hour code review][joel-s3a] · [Pushing Stage 3 to `main`][joel-s3b] |
-| Jeun Gwong | ChatGPT | [P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | [`takeOrder()` polymorphism check](ai-history/stage-2/Jeun%20Gwong.md) | [`Host` and Stage 2 → 3 diff review](ai-history/stage-3/Jeun%20Gwong.md) |
-| Jun Yu | — | Not provided | Not provided | Not provided |
-| Eswaran | Not stated | — | — | [Copying Stage 3 into this repository](ai-history/stage-3/Eswaran.md) |
+| Member | Stage 1 | Stage 2 | Stage 3 |
+|---|---|---|---|
+| Benjamin | [Skeleton and work split](ai-history/stage-1/Benjamin.md) (summary; the transcript could not be exported) | Not provided | [UML diagrams and change map](ai-history/stage-3/benjamin_diagrams.md) · [README and AI history links](ai-history/stage-3/benjamin_readme.md) |
+| Joel | [Git push and pull request help][joel-s1] | [Stage 2 compatibility checks][joel-s2] | [Happy Hour code review][joel-s3a] · [Pushing Stage 3 to `main`][joel-s3b] |
+| Jeun Gwong | [P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | [`takeOrder()` polymorphism check](ai-history/stage-2/Jeun%20Gwong.md) | [`Host` and Stage 2 → 3 diff review](ai-history/stage-3/Jeun%20Gwong.md) |
+| Jun Yu | — | — | — |
+| Eswaran | — | — | [Copying Stage 3 into this repository](ai-history/stage-3/Eswaran.md) |
 
 ### 9.3 How each AI chat maps to the code
 
@@ -324,7 +324,7 @@ Benjamin's, Eswaran's and Jeun Gwong's histories are in the [`ai-history/`](ai-h
 |---|---|---|
 | [Stage 3: copying Stage 3 in](ai-history/stage-3/Eswaran.md) | Compared the working repository with this one and updated six Stage 3 files; checked that `Waiter`, `Host` and `ComboMeal` were already up to date | Six direct commits on 14 November, one per file the chat lists: [`622b8c0`] `ConsoleUI`, [`23abe96`] `GameController`, [`dd13c0a`] `Customer`, [`5def0ad`] `HappyHour`, [`2817bfc`] `Menu`, [`7219b6b`] `Restaurant`. `Waiter`, `Host` and `ComboMeal` came earlier from [`e0bb219`] and [`683f9f1`]. As the chat says, no documentation was pushed: the docs came from [`9c85cd7`] and [`41efb4f`]. |
 
-Jun Yu has not provided an AI history yet.
+Jun Yu did not use AI.
 
 [`67c95ce`]: https://github.com/manus369/SC2002-Lab-Assignment/commit/67c95ce
 [`ebccbbb`]: https://github.com/manus369/SC2002-Lab-Assignment/commit/ebccbbb
