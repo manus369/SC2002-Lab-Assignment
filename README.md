@@ -13,6 +13,8 @@ You are the manager of a small restaurant with **2 tables** and very little staf
 
 **Repository:** https://github.com/manus369/SC2002-Lab-Assignment
 
+**Report:** [Restaurant Rush Group Report (PDF)](report/Restaurant_Rush_Group_Report.pdf)
+
 ---
 
 ## Contents
@@ -380,6 +382,7 @@ Jun Yu did not use AI.
 .
 ├── README.md
 ├── ai-history/                   AI conversation history, one folder per stage (Section 9)
+├── report/                       group report (PDF)
 ├── runs/                         reproducible input scripts (Section 6)
 ├── docs/
 │   └── diagrams/                 PlantUML sources (.puml) and rendered .png / .svg
