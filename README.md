@@ -249,7 +249,7 @@ In each class diagram, **green** classes are new in that stage and **yellow** cl
 
 ## 8. Presentation video
 
-[Watch the presentation (about 16 min)](https://youtu.be/F4B8vxBRAlk)
+[Watch the presentation (about 15 min)](https://youtu.be/F4B8vxBRAlk)
 
 | Time | Segment | Presenter |
 |---|---|---|
