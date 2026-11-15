@@ -276,59 +276,24 @@ Roles follow the Stage 1 work split (see [Benjamin's Stage 1 AI history](ai-hist
 | Member | GitHub | Area | Stage 1 | Stage 2 | Stage 3 |
 |---|---|---|---|---|---|
 | Benjamin | `manus369` | P5 · customers and menu; repository owner, integration, diagrams and README | [`67c95ce`] skeleton · [`ebccbbb`] customers and menu · [`455279c`] console UI (the `stage-1` tag) | [`51204d2`] `VIPCustomer`, `CriticCustomer` and their integration (the `stage-2` tag) | [`683f9f1`] `ComboMeal`, combo choice, `Customer.recover()` · [`9c85cd7`] final Stage 3 fix, README, UML diagrams, run scripts · [`41efb4f`] change map on the diagrams (the `stage-3` tag) |
-| Joel | `Baquaaa` | P1 · restaurant state | [`1f4a6e6`] `Restaurant`, `Table` on [`joel-restaurant-state`] ([PR #2]) | No change needed (see 9.3) | [`b1d2b17`] `HappyHour`, `Restaurant.recoverWaitingCustomers()` (direct) |
+| Joel | `Baquaaa` | P1 · restaurant state | [`1f4a6e6`] `Restaurant`, `Table` on [`joel-restaurant-state`] ([PR #2]) | No change needed | [`b1d2b17`] `HappyHour`, `Restaurant.recoverWaitingCustomers()` (direct) |
 | Jeun Gwong | `chanjg28` | P4 · staff and orders | [`955c463`] `Staff`, `Waiter`, `Chef`, `Cashier`, `Order` on [`p4-stage-1-staff-orders`] ([PR #1]) | [`9d263f4`] VIP discount in `Waiter.takeOrder()` on [`chanjg2004-p4-stage2`] ([PR #4]) | [`e0bb219`] `Host`, `Waiter.takeOrder(…, HappyHour)` on [`bob_stage3`] ([PR #5]) |
 | Jun Yu | `cake313` | P2 · game flow | [`5b3b079`] `GameController`, [`464edd3`] `Main` on [`cake313-patch-1`] ([PR #3]) | — | [`fce695b`] `happyHourStep()`, `hostStep()` in `GameController` ([PR #6]) · [`50efa92`], [`74b76d7`] `Main`, `GameController` (direct) |
 | Eswaran | `Waran-cell` | Stage 3 integration | — | — | [`622b8c0`] `ConsoleUI` · [`23abe96`] `GameController` · [`dd13c0a`] `Customer` · [`5def0ad`] `HappyHour` · [`2817bfc`] `Menu` · [`7219b6b`] `Restaurant` (direct) |
 
-The source code in the `stage-3` tag is identical to the tree at Eswaran's last commit, [`7219b6b`]. In between, Benjamin's [`9d2d36a`] removed the encapsulation tidy-up described under Joel in 9.3, and [`9c85cd7`] put it back.
+The source code in the `stage-3` tag is identical to the tree at Eswaran's last commit, [`7219b6b`]. In between, Benjamin's [`9d2d36a`] removed an encapsulation tidy-up (read-only `getTables()` / `getWaitingQueue()`, `final` fields, `StringBuilder` in `ConsoleUI`), and [`9c85cd7`] put it back.
 
 ### 9.2 AI conversation history
 
-Benjamin's, Eswaran's and Jeun Gwong's histories are in the [`ai-history/`](ai-history) folder on `main`, one folder per stage. Jeun Gwong added his through [PR #8] to [PR #12]. Joel's history is on his [`joel-ai-history`] branch, under `ai history/stage-N/Joel/`.
+Every member's AI history is in the [`ai-history/`](ai-history) folder, one folder per stage. Jeun Gwong added his through [PR #8] to [PR #12], and Joel's was merged from his `joel-ai-history` branch.
 
-| Member | Stage 1 | Stage 2 | Stage 3 |
-|---|---|---|---|
-| Benjamin | [Skeleton and work split](ai-history/stage-1/Benjamin.md) (summary; the transcript could not be exported) | Not provided | [UML diagrams and change map](ai-history/stage-3/benjamin_diagrams.md) · [README and AI history links](ai-history/stage-3/benjamin_readme.md) |
-| Joel | [Git push and pull request help][joel-s1] | [Stage 2 compatibility checks][joel-s2] | [Happy Hour code review][joel-s3a] · [Pushing Stage 3 to `main`][joel-s3b] |
-| Jeun Gwong | [P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | [`takeOrder()` polymorphism check](ai-history/stage-2/Jeun%20Gwong.md) | [`Host` and Stage 2 → 3 diff review](ai-history/stage-3/Jeun%20Gwong.md) |
-| Jun Yu | — | — | — |
-| Eswaran | — | — | [Copying Stage 3 into this repository](ai-history/stage-3/Eswaran.md) |
-
-### 9.3 How each AI chat maps to the code
-
-**Benjamin**
-
-| Chat | What the AI did | Where it shows in the repository |
-|---|---|---|
-| [Stage 1: skeleton and work split](ai-history/stage-1/Benjamin.md) | Generated the package and class skeleton with TODOs, and proposed the P1 to P5 split by area | The first commit, [`67c95ce`]. Each member then filled in their area: [PR #1], [PR #2], [PR #3], [`ebccbbb`], [`455279c`]. |
-| [Stage 3: UML diagrams](ai-history/stage-3/benjamin_diagrams.md) | Drew the three class diagrams and the Stage 3 sequence diagram from the code at each tag, rendered them with PlantUML, worked out the change-map counts, then added those counts to the diagram legends | [`docs/diagrams/`](docs/diagrams) was added in [`9c85cd7`]. The legend counts were added in [`41efb4f`], the commit the `stage-3` tag points to. |
-| [Stage 3: README](ai-history/stage-3/benjamin_readme.md) | Traced every member's AI chat to the commits, branches and pull requests above, and rewrote this section | This Section 9 and the `ai-history/` entry in Section 10 |
-
-**Joel**
-
-| Chat | What the AI did | Where it shows in the repository |
-|---|---|---|
-| [Stage 1: Git push and pull request help][joel-s1] | Explained `git push`, the 403 error for the `Baquaaa` account, and how to push a branch and open a pull request for commit `aafd4b0` "Improve code readability and encapsulation" | Joel filed this under Stage 1, but `aafd4b0` was made in the team's separate working repository (`manus369/sc2002-lab-poject`) after Stage 3: its suggested PR text cites the Stage 3 victory and defeat tests. The same changes (`StringBuilder` in `ConsoleUI`, `final` fields in `GameController`, `Customer` and `Restaurant`, read-only `getTables()` / `getWaitingQueue()`, clearing a customer's table reference) reached this repository with Eswaran's copy ([`622b8c0`] to [`7219b6b`]). [`9d2d36a`] removed them and [`9c85cd7`] restored them, with the same four files and +40/−25 lines as `aafd4b0` in the chat, plus a blank line in `Main`. Joel's actual Stage 1 code is [`1f4a6e6`] ([PR #2]); no AI chat was provided for it. |
-| [Stage 2: compatibility checks][joel-s2] | Confirmed that `Restaurant.applyWaitingLoss()` already handles VIP and Critic through the overridden `getSatisfactionLoss()`, so P1 needs no Stage 2 change, and gave a test checklist | Joel has no Stage 2 commit. The only Stage 2 edits to `Restaurant` and `Table` are comment and formatting cleanup in [`51204d2`] (see Section 4.1). |
-| [Stage 3: Happy Hour code review][joel-s3a] | Reviewed `HappyHour.java` and `recoverWaitingCustomers()`, and flagged that `Customer.recover()` did not exist yet | Benjamin added `Customer.recover()` in [`683f9f1`], two minutes after Joel's commit. |
-| [Stage 3: pushing to `main`][joel-s3b] | Gave the commands to commit and push directly to `main` with the message "Implement Happy Hour and satisfaction recovery" | [`b1d2b17`], with that exact message, adds `HappyHour.java` and changes `Restaurant.java`. The controller calls the AI said were still needed (recovery at the start of an active turn, `endTurn()`) were added by Jun Yu in [`fce695b`] ([PR #6]). |
-
-**Jeun Gwong**
-
-| Chat | What the AI did | Where it shows in the repository |
-|---|---|---|
-| [Stage 1: P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | Reviewed `Staff`, `Waiter`, `Chef`, `Cashier` and `Order`. Pointed out that `Order.markServed()`, `markPaid()` and `prepareOneUnit()` do not check the current status. | [`955c463`] on [`p4-stage-1-staff-orders`] ([PR #1]). `Order` was kept as it is (it is unchanged in all three stages); the status checks stay in `Waiter.serve()`, `Chef.prepare()` and `Restaurant.nextToPay()`. |
-| [Stage 2: `takeOrder()` polymorphism](ai-history/stage-2/Jeun%20Gwong.md) | Confirmed that `customer.chooseItem()` and `customer.applyDiscount()` dispatch on the real customer type, so a new customer type needs no change to `Waiter` | [`9d263f4`] on [`chanjg2004-p4-stage2`] ([PR #4]) is exactly the two lines discussed in the chat |
-| [Stage 3: `Host` and Stage 2 → 3 diff](ai-history/stage-3/Jeun%20Gwong.md) | Confirmed that `Host` reuses `Staff`'s one-task rule with its own flag, and that the Happy Hour discount is applied after the customer's discount. Noted that Happy Hour recovery and timing had to come from other classes. | [`e0bb219`] on [`bob_stage3`] ([PR #5]) adds `Host.java` and `takeOrder(…, HappyHour)`. Recovery is Joel's [`b1d2b17`]; the turn timing is in Jun Yu's `happyHourStep()` ([`fce695b`]). |
-
-**Eswaran**
-
-| Chat | What the AI did | Where it shows in the repository |
-|---|---|---|
-| [Stage 3: copying Stage 3 in](ai-history/stage-3/Eswaran.md) | Compared the working repository with this one and updated six Stage 3 files; checked that `Waiter`, `Host` and `ComboMeal` were already up to date | Six direct commits on 14 November, one per file the chat lists: [`622b8c0`] `ConsoleUI`, [`23abe96`] `GameController`, [`dd13c0a`] `Customer`, [`5def0ad`] `HappyHour`, [`2817bfc`] `Menu`, [`7219b6b`] `Restaurant`. `Waiter`, `Host` and `ComboMeal` came earlier from [`e0bb219`] and [`683f9f1`]. As the chat says, no documentation was pushed: the docs came from [`9c85cd7`] and [`41efb4f`]. |
-
-Jun Yu did not use AI.
+| Member | AI tool | Stage 1 | Stage 2 | Stage 3 |
+|---|---|---|---|---|
+| Benjamin | Claude Code | [Skeleton and work split](ai-history/stage-1/Benjamin.md) (summary; the transcript could not be exported) | Not provided | [UML diagrams and change map](ai-history/stage-3/benjamin_diagrams.md) · [README and AI history links](ai-history/stage-3/benjamin_readme.md) |
+| Joel | ChatGPT | [Git push and pull request help][joel-s1] | [Stage 2 compatibility checks][joel-s2] | [Happy Hour code review][joel-s3a] · [Pushing Stage 3 to `main`][joel-s3b] |
+| Jeun Gwong | ChatGPT | [P4 class review](ai-history/stage-1/Jeun%20Gwong.md) | [`takeOrder()` polymorphism check](ai-history/stage-2/Jeun%20Gwong.md) | [`Host` and Stage 2 → 3 diff review](ai-history/stage-3/Jeun%20Gwong.md) |
+| Jun Yu | None (did not use AI) | — | — | — |
+| Eswaran | ChatGPT | — | — | [Copying Stage 3 into this repository](ai-history/stage-3/Eswaran.md) |
 
 [`67c95ce`]: https://github.com/manus369/SC2002-Lab-Assignment/commit/67c95ce
 [`ebccbbb`]: https://github.com/manus369/SC2002-Lab-Assignment/commit/ebccbbb
@@ -359,7 +324,6 @@ Jun Yu did not use AI.
 [`chanjg2004-p4-stage2`]: https://github.com/manus369/SC2002-Lab-Assignment/tree/chanjg2004-p4-stage2
 [`bob_stage3`]: https://github.com/manus369/SC2002-Lab-Assignment/tree/bob_stage3
 [`cake313-patch-1`]: https://github.com/manus369/SC2002-Lab-Assignment/tree/cake313-patch-1
-[`joel-ai-history`]: https://github.com/manus369/SC2002-Lab-Assignment/tree/joel-ai-history
 [PR #1]: https://github.com/manus369/SC2002-Lab-Assignment/pull/1
 [PR #2]: https://github.com/manus369/SC2002-Lab-Assignment/pull/2
 [PR #3]: https://github.com/manus369/SC2002-Lab-Assignment/pull/3
@@ -368,10 +332,10 @@ Jun Yu did not use AI.
 [PR #6]: https://github.com/manus369/SC2002-Lab-Assignment/pull/6
 [PR #8]: https://github.com/manus369/SC2002-Lab-Assignment/pull/8
 [PR #12]: https://github.com/manus369/SC2002-Lab-Assignment/pull/12
-[joel-s1]: https://github.com/manus369/SC2002-Lab-Assignment/blob/joel-ai-history/ai%20history/stage-1/Joel/chat-01-github.md
-[joel-s2]: https://github.com/manus369/SC2002-Lab-Assignment/blob/joel-ai-history/ai%20history/stage-2/Joel/chat-01-code-checks.md
-[joel-s3a]: https://github.com/manus369/SC2002-Lab-Assignment/blob/joel-ai-history/ai%20history/stage-3/Joel/chat-01-code-checks.md
-[joel-s3b]: https://github.com/manus369/SC2002-Lab-Assignment/blob/joel-ai-history/ai%20history/stage-3/Joel/chat-02-github.md
+[joel-s1]: ai-history/stage-1/Joel.md
+[joel-s2]: ai-history/stage-2/Joel.md
+[joel-s3a]: ai-history/stage-3/Joel_happy_hour_review.md
+[joel-s3b]: ai-history/stage-3/Joel_github.md
 
 ---
 
