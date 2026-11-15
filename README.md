@@ -77,7 +77,7 @@ Do the same with `stage-2` and `stage-3`.
 |---|---|---|---|---|
 | 1 · Basic operation | Regular customers, menu, Waiter, Chef, Cashier, tables, queue, full turn sequence, victory and defeat | [`stage-1`](https://github.com/manus369/SC2002-Lab-Assignment/tree/stage-1) | `455279c` | 18 |
 | 2 · Customer behaviour | `VIPCustomer`, `CriticCustomer` | [`stage-2`](https://github.com/manus369/SC2002-Lab-Assignment/tree/stage-2) | `51204d2` | 20 |
-| 3 · New role and menu policy | `Host`, `ComboMeal`, `HappyHour` | [`stage-3`](https://github.com/manus369/SC2002-Lab-Assignment/tree/stage-3) | `7219b6b` | 23 |
+| 3 · New role and menu policy | `Host`, `ComboMeal`, `HappyHour` | [`stage-3`](https://github.com/manus369/SC2002-Lab-Assignment/tree/stage-3) | latest on `main` | 23 |
 
 **Compare links:** [stage-1 → stage-2](https://github.com/manus369/SC2002-Lab-Assignment/compare/stage-1...stage-2) · [stage-2 → stage-3](https://github.com/manus369/SC2002-Lab-Assignment/compare/stage-2...stage-3)
 

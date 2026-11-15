@@ -321,7 +321,10 @@ note bottom of Restaurant
 end note
 
 legend right
-  <back:#DFF5E1>   </back> new in Stage 3    <back:#FFF4CC>   </back> changed in Stage 3
+  <b><size:16>Change map, Stage 2 → 3 (20 → 23 classes)</size></b>
+  <b><size:15>3 added · 8 modified (6 functional + 2 cosmetic) · 12 unchanged</size></b>
+  <b>Unchanged in all 3 stages:</b> Order, Chef, Cashier, Staff, MenuItem, Money, RegularCustomer
+  <back:#DFF5E1>   </back> new in Stage 3    <back:#FFF4CC>   </back> changed in Stage 3 (functional changes)
   Changes: Customer (+COMBO_SATISFACTION, recover(), combo rule in chooseItem),
   Menu (+combos), Restaurant (+happyHour, recoverWaitingCustomers()),
   Waiter (takeOrder now takes HappyHour), GameController (+host, happyHourStep(), hostStep()),
